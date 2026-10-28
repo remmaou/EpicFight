@@ -33,7 +33,7 @@ jobs:
 
       - name: Upload mod jar
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: epicfight-fabric-jar
           path: |
@@ -41,7 +41,7 @@ jobs:
             !build/libs/*-sources.jar
       - name: Upload build log
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-log
           path: build.log
@@ -69,13 +69,13 @@ jobs:
           ./gradlew build -Pcompat=${{ matrix.module }} --stacktrace --no-daemon 2>&1 | tee build-compat-${{ matrix.module }}.log
       - name: Upload jar compat
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: epicfight-fabric-jar-compat-${{ matrix.module }}
           path: build/libs/*.jar
       - name: Upload log compat
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-log-compat-${{ matrix.module }}
           path: build-compat-${{ matrix.module }}.log
