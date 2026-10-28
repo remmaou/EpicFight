@@ -1,0 +1,115 @@
+plugins {
+    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'dev.echoellet.mc-safe-resources' version '0.0.2'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+    // Forge Config API Port (provides NeoForge's ModConfigSpec API on Fabric)
+    maven { name = 'Fuzs Mod Resources'; url = 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/' }
+    // Mod Menu (layar konfigurasi di game)
+    maven { name = 'TerraformersMC'; url = 'https://maven.terraformersmc.com/' }
+    // Fabric mods that Epic Fight can integrate with
+    maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven'; content { includeGroup 'maven.modrinth' } }
+}
+
+loom {
+    accessWidenerPath = file('src/main/resources/epicfight.accesswidener')
+
+    mixin {
+        defaultRefmapName = 'epicfight.mixins.refmap.json'
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${project.forgeconfigapiport_version}"
+    // Ikut dibundel di dalam jar (jar-in-jar), jadi cukup Fabric API + jar Epic Fight ini
+    include "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${project.forgeconfigapiport_version}"
+    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+    // Anotasi yang dipakai source asli (di NeoForge sudah tersedia lewat classpath Minecraft)
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+    compileOnly "org.checkerframework:checker-qual:3.43.0"
+}
+
+mcSafeResources {
+    namespace.set(project.mod_id)
+    outputPackage.set("yesman.${project.mod_id}.generated")
+}
+
+sourceSets.main.java.srcDir(tasks.named('generateLangKeys').map { it.outputs.files.singleFile })
+sourceSets.main.java.srcDir(tasks.named('generateSoundKeys').map { it.outputs.files.singleFile })
+
+tasks.named('compileJava') {
+    dependsOn 'generateLangKeys', 'generateSoundKeys'
+}
+
+// Modul compat dengan library pihak ketiga ada di src/compat/<modul>/java dan hanya ikut build bila diminta:
+//   gradle build -Pcompat=iris,playeranimator,firstperson,skinlayers3d
+// (ICompatModule, MinecraftMod, CompatLoader, BetterThirdPerson, dan IRISCompat inti selalu ikut build inti.)
+def compatModules = (project.findProperty('compat') ?: '').toString().split(',').collect { it.trim() }.findAll { it }
+
+compatModules.each { m ->
+    sourceSets.main.java.srcDir("src/compat/${m}/java")
+}
+
+dependencies {
+    if (compatModules.contains('iris')) {
+        modCompileOnly "maven.modrinth:sodium:${project.sodium_version}"
+        modCompileOnly "maven.modrinth:iris:${project.iris_version}"
+    }
+    if (compatModules.contains('playeranimator')) {
+        modCompileOnly "maven.modrinth:player-animator:${project.playeranimator_version}"
+    }
+    if (compatModules.contains('skinlayers3d')) {
+        // jar 3D Skin Layers ada di folder libs/ (dikompilasi terhadap versi yang sama dengan yang dipakai di game)
+        modCompileOnly files(fileTree(dir: 'libs', include: 'skinlayers3d-fabric*.jar'))
+    }
+    if (compatModules.contains('firstperson')) {
+        modCompileOnly "maven.modrinth:first-person-model:${project.firstperson_version}"
+    }
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+    // Show every error in one CI run instead of javac's default cap of 100
+    options.compilerArgs += ['-Xmaxerrs', '100000', '-Xmaxwarns', '1000']
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    from('LICENSE')
+    from('LICENSE-ASSETS')
+    from('LICENSE-ASSETS') { into 'assets/epicfight' }
+    from('LICENSE-ASSETS') { into 'assets/minecraft' }
+}
+
+// validateAccessWidener berhenti di entri pertama yang tidak cocok dengan Minecraft 1.21.1 (sisa konversi dari
+// access transformer NeoForge). Entri yang tidak cocok hanya diabaikan Loom/Loader, jadi validasi dimatikan.
+tasks.matching { it.name == 'validateAccessWidener' }.configureEach { enabled = false }
