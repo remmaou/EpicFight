@@ -1,0 +1,81 @@
+name: Build Epic Fight (Fabric 1.21.1)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  core:
+    name: Build inti (tanpa compat)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build
+        run: |
+          chmod +x gradlew
+          set -o pipefail
+          ./gradlew build --stacktrace --no-daemon 2>&1 | tee build.log
+      - name: Ringkasan error (tab Summary)
+        if: failure()
+        run: |
+          {
+            echo "## Error build"
+            echo '```'
+            grep -E "error:|warning: Cannot find|What went wrong" -A3 build.log | head -120 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload mod jar
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: epicfight-fabric-jar
+          path: |
+            build/libs/*.jar
+            !build/libs/*-sources.jar
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+
+  compat:
+    name: Compat ${{ matrix.module }}
+    needs: core
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        module: [iris, playeranimator, firstperson, skinlayers3d]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build dengan compat ${{ matrix.module }}
+        run: |
+          chmod +x gradlew
+          set -o pipefail
+          ./gradlew build -Pcompat=${{ matrix.module }} --stacktrace --no-daemon 2>&1 | tee build-compat-${{ matrix.module }}.log
+      - name: Upload jar compat
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: epicfight-fabric-jar-compat-${{ matrix.module }}
+          path: build/libs/*.jar
+      - name: Upload log compat
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log-compat-${{ matrix.module }}
+          path: build-compat-${{ matrix.module }}.log
