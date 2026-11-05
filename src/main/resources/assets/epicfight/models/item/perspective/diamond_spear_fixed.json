@@ -1,7 +1,0 @@
-{
-	"gui_light": "front",
-	"parent": "epicfight:item/spear",
-	"textures": {
-		"layer0": "epicfight:item/diamond_spear_gui"
-	}
-}
