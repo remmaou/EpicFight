@@ -1,0 +1,7 @@
+{
+    "type": "minecraft:smithing_transform",
+    "template": { "item": "minecraft:nether_star" },
+    "base": { "item": "epicfight:netherite_greatsword" },
+    "addition": { "item": "minecraft:poppy" },
+    "result": { "id": "efn:crimson_moon", "count": 1 }
+}

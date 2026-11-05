@@ -1,0 +1,39 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_21",
+  "package": "yesman.epicfight.platform.fabric.mixin",
+  "mixins": [
+    "common.MixinHolderReference",
+    "common.MixinEntityPatchHolder",
+    "common.MixinEntityCombat",
+    "common.MixinLivingEntityCombat",
+    "common.MixinServerLevelTick",
+    "common.MixinPersistentEntitySectionManager",
+    "common.MixinEnderManTeleport",
+    "common.MixinProjectileImpact",
+    "common.MixinPlayerDataStorage",
+    "common.MixinBowItem",
+    "common.MixinItemStackModifiers",
+    "common.MixinLightningBolt",
+    "common.MixinEntityThunderHit"
+  ],
+  "client": [
+    "client.MixinClientLevelTick",
+    "client.MixinGameRendererEvents",
+    "client.MixinBossBarEvent",
+    "client.MixinGuiRenderEvent",
+    "client.MixinHandRenderEvent",
+    "client.MixinJumpEvent",
+    "client.MixinMoveInputEvent",
+    "client.MixinRendererReloadEvent",
+    "client.MixinRespawnEvent",
+    "client.MixinScrollEvent",
+    "client.MixinLivingRenderEvent",
+    "client.MixinKeyMapping"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "epicfight.mixins.refmap.json"
+}

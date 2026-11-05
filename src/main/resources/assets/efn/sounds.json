@@ -1,0 +1,65 @@
+{
+    "whoosh_heavy_1": {
+        "category": "entity",
+        "sounds": [
+            {
+                "name": "efn:whoosh_heavy_1",
+                "stream": true
+            }
+        ]
+    },
+    "whoosh_heavy_2": {
+        "category": "entity",
+        "sounds": [
+            {
+                "name": "efn:whoosh_heavy_2",
+                "stream": true
+            }
+        ]
+    },
+    "whoosh_heavy_3": {
+        "category": "entity",
+        "sounds": [
+            {
+                "name": "efn:whoosh_heavy_3",
+                "stream": true
+            }
+        ]
+    },
+    "whoosh_heavy_4": {
+        "category": "entity",
+        "sounds": [
+            {
+                "name": "efn:whoosh_heavy_4",
+                "stream": true
+            }
+        ]
+    },
+    "yamato": {
+        "category": "entity",
+        "sounds": [
+            {
+                "name": "efn:yamato",
+                "stream": true
+            }
+        ]
+    },
+    "yamato_in": {
+        "category": "entity",
+        "sounds": [
+            {
+                "name": "efn:yamato_in",
+                "stream": true
+            }
+        ]
+    },
+    "judgementcut": {
+        "category": "entity",
+        "sounds": [
+            {
+                "name": "efn:judgementcut",
+                "stream": true
+            }
+        ]
+    }
+}

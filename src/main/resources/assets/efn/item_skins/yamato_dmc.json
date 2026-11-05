@@ -1,0 +1,28 @@
+{
+    "renderer": "efn:yamato_mesh",
+    "mesh_drawn": "efn:weapon/yamato_dmc",
+    "mesh_sheathed": "efn:weapon/yamato_dmc_in_sheath",
+    "texture": "efn:textures/item/weapon/yamato_dmc.png",
+    "trail": {
+        "color": [
+            110,
+            150,
+            255
+        ],
+        "begin_pos": [
+            0.0,
+            0.2,
+            -0.5
+        ],
+        "end_pos": [
+            0.0,
+            0.4,
+            -2.05
+        ],
+        "lifetime": 4,
+        "interpolations": 10,
+        "texture_path": "efn:textures/trail/crimson_moon_trail.png",
+        "particle_type": "epicfight:swing_trail"
+    },
+    "appeared_in_afterimage": false
+}

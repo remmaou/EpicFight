@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:smithing_transform",
+    "template": {
+        "item": "minecraft:nether_star"
+    },
+    "base": {
+        "item": "efn:crimson_moon"
+    },
+    "addition": {
+        "item": "minecraft:echo_shard"
+    },
+    "result": {
+        "id": "efn:shadow",
+        "count": 1
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "renderer": "efn:mesh_item",
+    "mesh_main": "efn:weapon/crimson_moon",
+    "texture": "efn:textures/item/weapon/shadow.png",
+    "texture_l": "efn:textures/item/weapon/shadow_light.png",
+    "mesh_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "mesh_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "mesh_scale": 1.0,
+    "trail": {
+        "color": [
+            170,
+            90,
+            255
+        ],
+        "begin_pos": [
+            0.0,
+            0.0,
+            0.1
+        ],
+        "end_pos": [
+            0.0,
+            0.0,
+            -0.9
+        ],
+        "lifetime": 6,
+        "interpolations": 10,
+        "texture_path": "efn:textures/trail/shadow_trail.png",
+        "particle_type": "epicfight:swing_trail"
+    },
+    "fp_offset": [
+        0.43,
+        0.467,
+        -0.403
+    ],
+    "fp_rotation": [
+        -2.4,
+        -30.6,
+        -111.1
+    ],
+    "fp_scale": 0.55,
+    "key": "shadow"
+}
